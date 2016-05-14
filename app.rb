@@ -21,11 +21,19 @@ set :protection, false
 class Score < Sequel::Model
 end
 
+options '/score' do
+  200
+end
+
 post '/score' do
   user = params['user']
   score = params['score']
   Score.create(name: user, score: score)
   "saved"
+end
+
+options '/leaderboard' do
+  200
 end
 
 get '/leaderboard' do
