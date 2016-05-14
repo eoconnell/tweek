@@ -11,6 +11,13 @@ configure do
   end
 end
 
+before do
+  headers 'Access-Control-Allow-Origin' => '*',
+          'Access-Control-Allow-Methods' => ['OPTIONS', 'GET', 'POST']
+end
+
+set :protection, false
+
 class Score < Sequel::Model
 end
 
