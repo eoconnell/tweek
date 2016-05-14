@@ -1,14 +1,26 @@
 require 'sinatra'
 require 'json'
+require 'sequel'
 
-get '/leaderboard' do
-  (1..10).collect do |n|
-    { name: "user#{n}", score: 100 - n }
-  end.to_json
+configure do
+  DB = Sequel.connect(ENV["DATABASE_URL"] || "sqlite://db.sqlite3")
+  DB.create_table? :scores do
+      primary_key :id
+      String :name
+       Float :score
+  end
+end
+
+class Score < Sequel::Model
 end
 
 post '/score' do
   user = params['user']
   score = params['score']
-  "#{user} #{score}"
+  Score.create(name: user, score: score)
+  "saved"
+end
+
+get '/leaderboard' do
+  Score.order(:score).reverse.limit(10).naked.all.to_json
 end
