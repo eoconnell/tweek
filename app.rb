@@ -1,4 +1,5 @@
 require 'sinatra'
+require 'sinatra/cross_origin'
 require 'json'
 require 'sequel'
 
@@ -9,16 +10,13 @@ configure do
       String :name
        Float :score
   end
+
+  enable :cross_origin
 end
 
-before do
-  content_type :json
-  headers 'Access-Control-Allow-Origin' => '*',
-          'Access-Control-Allow-Methods' => 'OPTIONS, GET, POST',
-          'Access-Control-Allow-Headers' => 'Content-Type'
-end
-
-set :protection, false
+set :allow_origin, :any
+set :allow_methods, [:get, :post, :options]
+set :expose_headers, ['X-PINGOTHER', 'Content-Type']
 
 class Score < Sequel::Model
 end
@@ -35,5 +33,6 @@ post '/score' do
 end
 
 get '/leaderboard' do
+  content_type :json
   Score.order(:score).reverse.limit(10).naked.all.to_json
 end
