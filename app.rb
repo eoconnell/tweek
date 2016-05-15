@@ -30,7 +30,7 @@ post '/score' do
   user = body['user']
   score = body['score']
   Score.create(name: user, score: score)
-  "saved"
+  status 201
 end
 
 get '/leaderboard' do
