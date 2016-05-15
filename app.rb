@@ -27,9 +27,7 @@ end
 
 post '/score' do
   body = JSON.parse request.body.read
-  user = body['user']
-  score = body['score']
-  Score.create(name: user, score: score)
+  Score.create(name: body['user'], score: body['score'])
   status 201
 end
 
