@@ -26,8 +26,9 @@ options '*' do
 end
 
 post '/score' do
-  user = params['user']
-  score = params['score']
+  body = JSON.parse request.body.read
+  user = body['user']
+  score = body['score']
   Score.create(name: user, score: score)
   "saved"
 end
